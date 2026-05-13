@@ -1440,6 +1440,56 @@ body{font-family:sans-serif;background:#ffe0ee;display:flex;justify-content:cent
 
 
 
+/* 🎵 MUSIC BUTTON */
+.music-btn{
+  position:fixed;
+  top:18px;
+  right:18px;
+
+  width:52px;
+  height:52px;
+
+  border:none;
+  border-radius:50%;
+
+  background:linear-gradient(135deg,#ff4d88,#ff85b5);
+  color:white;
+
+  font-size:22px;
+  cursor:pointer;
+
+  z-index:99999;
+
+  box-shadow:
+    0 0 15px rgba(255,77,136,.5),
+    0 8px 20px rgba(0,0,0,.2);
+
+  animation:musicGlow 2s infinite ease-in-out;
+}
+
+.music-btn:active{
+  transform:scale(.95);
+}
+
+@keyframes musicGlow{
+
+  0%,100%{
+    transform:scale(1);
+  }
+
+  50%{
+    transform:scale(1.08);
+  }
+
+}
+
+
+
+
+
+
+
+
 
 
 
@@ -1452,6 +1502,18 @@ body{font-family:sans-serif;background:#ffe0ee;display:flex;justify-content:cent
 <!-- WELCOME -->
 <div class="screen active" id="s-welcome">
   <div style="height:24px;"></div>
+
+
+  <!-- 🎵 BACKGROUND MUSIC -->
+<audio id="bgMusic" loop></audio>
+
+<!-- 🎵 MUSIC ON/OFF BUTTON -->
+<button class="music-btn" onclick="toggleMusic()">
+  🎵
+</button>
+
+
+
   <div style="font-size:56px;text-align:center;z-index:1;">🎂👑💕</div>
   <div class="wcard">
     <h1>Happy Birthday Zoya</br> My Princess! 🎀</h1>
@@ -1742,6 +1804,71 @@ body{font-family:sans-serif;background:#ffe0ee;display:flex;justify-content:cent
 
 
 <script>
+
+
+/* 🎵 SONGS */
+const songs = [
+  "music/song1.mp3",
+  "music/song2.mp3"
+];
+
+const bgMusic = document.getElementById("bgMusic");
+
+let currentSong = 0;
+let musicPlaying = false;
+
+/* load first song */
+bgMusic.src = songs[currentSong];
+
+/* when one song ends → next song */
+bgMusic.addEventListener("ended", () => {
+
+  currentSong++;
+
+  if(currentSong >= songs.length){
+    currentSong = 0;
+  }
+
+  bgMusic.src = songs[currentSong];
+  bgMusic.play();
+
+});
+
+/* 🎵 PLAY / PAUSE */
+function toggleMusic(){
+
+  if(musicPlaying){
+
+    bgMusic.pause();
+    musicPlaying = false;
+
+  }
+
+  else{
+
+    bgMusic.play();
+    musicPlaying = true;
+
+  }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 let runnerPosX = 10;
 let runnerPosY = 50;
