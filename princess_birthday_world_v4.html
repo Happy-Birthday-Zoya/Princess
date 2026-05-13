@@ -1438,51 +1438,37 @@ body{font-family:sans-serif;background:#ffe0ee;display:flex;justify-content:cent
   color:#333;
 }
 
-
-
-/* 🎵 MUSIC BUTTON */
 .music-btn{
   position:fixed;
   top:18px;
   right:18px;
 
-  width:52px;
-  height:52px;
+  width:40px;
+  height:40px;
 
   border:none;
   border-radius:50%;
 
-  background:linear-gradient(135deg,#ff4d88,#ff85b5);
+  background:#999;   /* OFF = gray */
   color:white;
 
-  font-size:22px;
-  cursor:pointer;
+  font-size:18px;
 
+  cursor:pointer;
   z-index:99999;
 
-  box-shadow:
-    0 0 15px rgba(255,77,136,.5),
-    0 8px 20px rgba(0,0,0,.2);
-
-  animation:musicGlow 2s infinite ease-in-out;
+  transition:0.2s ease;
 }
 
-.music-btn:active{
-  transform:scale(.95);
+/* ON state */
+.music-btn.on{
+  background:linear-gradient(135deg,#ff4d88,#ff85b5);
 }
 
-@keyframes musicGlow{
-
-  0%,100%{
-    transform:scale(1);
-  }
-
-  50%{
-    transform:scale(1.08);
-  }
-
+/* hover effect only */
+.music-btn:hover{
+  transform:scale(1.08);
 }
-
 
 
 
@@ -1805,22 +1791,48 @@ body{font-family:sans-serif;background:#ffe0ee;display:flex;justify-content:cent
 
 <script>
 
-
-/* 🎵 SONGS */
+/* 🎵 SONG LIST */
 const songs = [
-  "Sparkle   Your Name AMV (1).m4a",
-  "Your Name - Nandemonaiya AMV [4K] (1).m4a"
+  "music/song1.mp3",
+  "music/song2.mp3"
 ];
-
-const bgMusic = document.getElementById("bgMusic");
 
 let currentSong = 0;
 let musicPlaying = false;
 
+const bgMusic = document.getElementById("bgMusic");
+const btn = document.querySelector(".music-btn");
+
+bgMusic.volume = 0.4;
+
 /* load first song */
 bgMusic.src = songs[currentSong];
 
-/* when one song ends → next song */
+/* 🎵 TOGGLE MUSIC */
+function toggleMusic(){
+
+  // if playing → pause
+  if(musicPlaying){
+    bgMusic.pause();
+    musicPlaying = false;
+
+    if(btn) btn.classList.remove("on");
+    return;
+  }
+
+  // if not playing → play
+  bgMusic.play()
+    .then(() => {
+      musicPlaying = true;
+      if(btn) btn.classList.add("on");
+    })
+    .catch(err => {
+      console.log("Music play blocked until user interaction", err);
+    });
+
+}
+
+/* 🎵 AUTO PLAY NEXT SONG WHEN ONE ENDS */
 bgMusic.addEventListener("ended", () => {
 
   currentSong++;
@@ -1830,29 +1842,12 @@ bgMusic.addEventListener("ended", () => {
   }
 
   bgMusic.src = songs[currentSong];
-  bgMusic.play();
-
-});
-
-/* 🎵 PLAY / PAUSE */
-function toggleMusic(){
 
   if(musicPlaying){
-
-    bgMusic.pause();
-    musicPlaying = false;
-
-  }
-
-  else{
-
     bgMusic.play();
-    musicPlaying = true;
-
   }
 
-}
-
+});
 
 
 
